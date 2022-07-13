@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".homefragments.NewsFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="@string/news_header"
+        android:textSize="24sp"
+        android:paddingVertical="5dp"
+        android:background="@drawable/news_header_gradient"
+        android:textColor="#FFFFFF"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:id="@+id/news_title"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/news_title"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/news_recycler_view"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

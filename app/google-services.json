@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "320715699367",
+    "firebase_url": "https://central-chat-5d62e-default-rtdb.firebaseio.com",
+    "project_id": "central-chat-5d62e",
+    "storage_bucket": "central-chat-5d62e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320715699367:android:7e2120641bc44f8aecd782",
+        "android_client_info": {
+          "package_name": "com.example.centralchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320715699367-1ffstj4m6cig241osf0qjn9uakglcfk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlX4itOrdmsZjp5VK5kf3-Q4Na5hiDHwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320715699367-1ffstj4m6cig241osf0qjn9uakglcfk6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "320715699367-58rn39pqb22tksr4c7jh2d2drhk909pi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "caleb.CU"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320715699367:android:7828ec60399ac830ecd782",
+        "android_client_info": {
+          "package_name": "com.example.cuchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320715699367-1ffstj4m6cig241osf0qjn9uakglcfk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlX4itOrdmsZjp5VK5kf3-Q4Na5hiDHwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320715699367-1ffstj4m6cig241osf0qjn9uakglcfk6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "320715699367-58rn39pqb22tksr4c7jh2d2drhk909pi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "caleb.CU"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

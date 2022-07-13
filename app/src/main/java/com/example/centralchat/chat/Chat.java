@@ -1,0 +1,181 @@
+package com.example.centralchat.chat;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.example.centralchat.MemoryData;
+import com.example.centralchat.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class Chat extends AppCompatActivity {
+
+    DatabaseReference dbReference;
+    private final List<ChatList> chatLists = new ArrayList<>();
+    private String chatKey;
+    String getUserMobile = "";
+    private RecyclerView chattingRecyclerView;
+    private ChatAdapter chatAdapter;
+    private boolean loadingFirstTime = true;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
+
+        final ImageView backBtn = findViewById(R.id.backBtn);
+        final TextView nameTv = findViewById(R.id.userName);
+        final EditText messageEditText = findViewById(R.id.messageEditTxt);
+        final CircleImageView profilePic = findViewById(R.id.profilePic);
+        final ImageView sendBtn = findViewById(R.id.sendBtn);
+        chattingRecyclerView = findViewById(R.id.chatsRecyclerView);
+
+        dbReference = FirebaseDatabase.getInstance()
+                .getReferenceFromUrl("https://central-chat-5d62e-default-rtdb.firebaseio.com/");
+
+        //get data from messages adapter
+        final String getName = getIntent().getStringExtra("name");
+        final String getProfilePic = getIntent().getStringExtra("profile_pic");
+        chatKey = getIntent().getStringExtra("chat_key");
+        final String getMobile = getIntent().getStringExtra("mobile");
+
+        //get user mobile from memory
+        getUserMobile = MemoryData.getIndexNum(Chat.this);
+
+        nameTv.setText(getName);
+        if (getProfilePic.equals("default")) {
+            Glide.with(this).load(R.drawable.user_icon).into(profilePic);
+        }else {
+            Glide.with(this).load(getProfilePic).into(profilePic);
+        }
+
+        chattingRecyclerView.setHasFixedSize(true);
+        chattingRecyclerView.setLayoutManager(new LinearLayoutManager(Chat.this));
+
+        chatAdapter = new ChatAdapter(chatLists, Chat.this);
+        chattingRecyclerView.setAdapter(chatAdapter);
+
+
+            dbReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (chatKey.isEmpty()) {
+                        //generate chatKey. By default chatKey is 1
+                        chatKey = "1";
+
+                        if (snapshot.hasChild("chat")) {
+                            chatKey = String.valueOf(snapshot.child("chat").getChildrenCount() + 1);
+                        }
+                    }
+
+                    if (snapshot.hasChild("chat")) {
+                        if (snapshot.child("chat").child(chatKey).hasChild("messages")) {
+
+                            chatLists.clear();
+
+                            for (DataSnapshot messageSnapshot : snapshot.child("chat").child(chatKey).child("messages").getChildren()) {
+
+                                if (messageSnapshot.hasChild("msg") && messageSnapshot.hasChild("mobile")) {
+
+                                    final String messageTimeStamps = messageSnapshot.getKey();
+                                    final String getMobile = messageSnapshot.child("mobile").getValue(String.class);
+                                    final String getMsg = messageSnapshot.child("msg").getValue(String.class);
+
+                                    assert getMobile != null;
+                                    assert messageTimeStamps != null;
+
+                                    Timestamp timestamp = new Timestamp(Long.parseLong(messageTimeStamps));
+                                    Date date = new Date(timestamp.getTime());
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                                    SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
+                                    ChatList chatList = new ChatList(getMobile, getName, getMsg, simpleDateFormat.format(date), simpleTimeFormat.format(date));
+                                    chatLists.add(chatList);
+
+                                    if (loadingFirstTime|| Long.parseLong(messageTimeStamps) < Long.parseLong(MemoryData.getLastMsgTS(Chat.this, chatKey))) {
+                                        loadingFirstTime = false;
+                                        MemoryData.saveLastMsgTS(messageTimeStamps, chatKey, Chat.this);
+                                        chatAdapter.updateChatList(chatLists);
+                                        chattingRecyclerView.scrollToPosition(chatLists.size() - 1);
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+
+        sendBtn.setOnClickListener(v -> {
+            final String getTxtMessage = messageEditText.getText().toString();
+
+            //get currentTimeStamp
+            final String currentTimeStamp = String.valueOf(System.currentTimeMillis()).substring(0, 10);
+
+            dbReference.child("chat").child(chatKey).child("user_1").setValue(getUserMobile);
+            dbReference.child("chat").child(chatKey).child("user_2").setValue(getMobile);
+            dbReference.child("chat").child(chatKey).child("messages")
+                    .child(currentTimeStamp).child("msg").setValue(getTxtMessage);
+            dbReference.child("chat").child(chatKey).child("messages")
+                    .child(currentTimeStamp).child("mobile").setValue(getUserMobile);
+
+            //clear textField after text sent and hide keyboard
+            closeKeyboard();
+            messageEditText.setText("");
+        });
+
+        backBtn.setOnClickListener(v -> finish());
+    }
+    private void closeKeyboard()
+    {
+        // this will give us the view
+        // which is currently focus
+        // in this layout
+        View view = this.getCurrentFocus();
+
+        // if nothing is currently
+        // focus then this will protect
+        // the app from crash
+        if (view != null) {
+
+            // now assign the system
+            // service to InputMethodManager
+            InputMethodManager manager
+                    = (InputMethodManager)
+                    getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+            manager
+                    .hideSoftInputFromWindow(
+                            view.getWindowToken(), 0);
+        }
+    }
+}
