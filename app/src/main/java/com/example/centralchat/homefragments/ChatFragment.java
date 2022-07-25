@@ -31,10 +31,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatFragment extends Fragment {
 
     View view;
-    private String mobile, name;
+    private String indexNum;
     RecyclerView messagesRecyclerView;
     DatabaseReference dbReference;
-    private List<MessagesList> messagesLists = new ArrayList<>();
+    private final List<MessagesList> messagesLists = new ArrayList<>();
     private int unseenMessages = 0;
     private String lastMessage = "";
     private MessagesAdapter messagesAdapter;
@@ -51,8 +51,7 @@ public class ChatFragment extends Fragment {
 
         //get arguments from bundle
         assert getArguments() != null;
-        mobile = getArguments().getString("indexNum");
-        name = getArguments().getString("username");
+        indexNum = getArguments().getString("indexNum");
 
         messagesRecyclerView.setHasFixedSize(true);
         messagesRecyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
@@ -73,7 +72,7 @@ public class ChatFragment extends Fragment {
         dbReference.child("users").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final String profilePic = snapshot.child(mobile)
+                final String profilePic = snapshot.child(indexNum)
                         .child("profile picture").getValue(String.class);
 
                 assert profilePic != null;
@@ -103,15 +102,15 @@ public class ChatFragment extends Fragment {
 
                     dataSet = false;
 
-                    final String getMobile = dataSnapshot.getKey();
-                    assert getMobile != null;
+                    final String getOtherIndexNum = dataSnapshot.getKey();
+                    assert getOtherIndexNum != null;
                     //check if the index numbers being received do not match what's stored in memory
-                    if(!getMobile.equals(mobile)) {
-                        final String getName = dataSnapshot.child("username").getValue(String.class);
+                    if(!getOtherIndexNum.equals(indexNum)) {
+                        final String getUserName = dataSnapshot.child("username").getValue(String.class);
                         final String getProfilePic = dataSnapshot.child("profile picture").getValue(String.class);
 
 
-                        dbReference.child("chat").addListenerForSingleValueEvent(new ValueEventListener() {
+                        dbReference.child("chat").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 int getChatCount = (int) snapshot.getChildrenCount();
@@ -129,17 +128,19 @@ public class ChatFragment extends Fragment {
                                             assert getUserOne != null;
                                             assert getUserTwo != null;
 
-                                            if (getUserOne.equals(getMobile) && getUserTwo.equals(mobile) ||
-                                                    getUserOne.equals(mobile) && getUserTwo.equals(getMobile)) {
+
+                                            if (getUserOne.equals(getOtherIndexNum) && getUserTwo.equals(indexNum) ||
+                                                    getUserOne.equals(indexNum) && getUserTwo.equals(getOtherIndexNum)) {
                                                 for (DataSnapshot chatDataSnapshot : dataSnapshot1.child("messages").getChildren()) {
                                                     final long getMessageKey = Long.parseLong(Objects.requireNonNull(chatDataSnapshot.getKey()));
                                                     final long getLastSeenMessage = Long.parseLong(MemoryData.getLastMsgTS(requireActivity(), getKey));
 
                                                     lastMessage = chatDataSnapshot.child("msg").getValue(String.class);
+                                                    //TODO: Fix unseenMessages count
                                                     if (getMessageKey > getLastSeenMessage) {
-                                                        unseenMessages = unseenMessages + 1;
+                                                        unseenMessages++;
                                                     }else {
-                                                        unseenMessages = unseenMessages - 1;
+                                                        unseenMessages = 0;
                                                     }
                                                 }
                                             }
@@ -148,7 +149,7 @@ public class ChatFragment extends Fragment {
                                 }
                                 if (!dataSet) {
                                     dataSet = true;
-                                    MessagesList messagesList = new MessagesList(getName, getMobile, lastMessage, getProfilePic, unseenMessages, chatKey);
+                                    MessagesList messagesList = new MessagesList(getUserName, getOtherIndexNum, lastMessage, getProfilePic, unseenMessages, chatKey);
                                     messagesLists.add(messagesList);
                                     messagesAdapter.updateData(messagesLists);
                                 }
@@ -169,6 +170,7 @@ public class ChatFragment extends Fragment {
 
             }
         });
+
 
         // Inflate the layout for this fragment
         return view;

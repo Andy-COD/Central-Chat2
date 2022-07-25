@@ -1,7 +1,9 @@
 package com.example.centralchat.chat;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,11 +26,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,7 +40,7 @@ public class Chat extends AppCompatActivity {
     DatabaseReference dbReference;
     private final List<ChatList> chatLists = new ArrayList<>();
     private String chatKey;
-    String getUserMobile = "";
+    String getUserIndexNum = "";
     private RecyclerView chattingRecyclerView;
     private ChatAdapter chatAdapter;
     private boolean loadingFirstTime = true;
@@ -47,7 +51,7 @@ public class Chat extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         final ImageView backBtn = findViewById(R.id.backBtn);
-        final TextView nameTv = findViewById(R.id.userName);
+        final TextView userName = findViewById(R.id.userName);
         final EditText messageEditText = findViewById(R.id.messageEditTxt);
         final CircleImageView profilePic = findViewById(R.id.profilePic);
         final ImageView sendBtn = findViewById(R.id.sendBtn);
@@ -57,15 +61,15 @@ public class Chat extends AppCompatActivity {
                 .getReferenceFromUrl("https://central-chat-5d62e-default-rtdb.firebaseio.com/");
 
         //get data from messages adapter
-        final String getName = getIntent().getStringExtra("name");
+        final String getUserName = getIntent().getStringExtra("userName");
         final String getProfilePic = getIntent().getStringExtra("profile_pic");
         chatKey = getIntent().getStringExtra("chat_key");
-        final String getMobile = getIntent().getStringExtra("mobile");
+        final String getOtherIndexNum = getIntent().getStringExtra("indexNum");
 
         //get user mobile from memory
-        getUserMobile = MemoryData.getIndexNum(Chat.this);
+        getUserIndexNum = MemoryData.getIndexNum(Chat.this);
 
-        nameTv.setText(getName);
+        userName.setText(getUserName);
         if (getProfilePic.equals("default")) {
             Glide.with(this).load(R.drawable.user_icon).into(profilePic);
         }else {
@@ -80,11 +84,12 @@ public class Chat extends AppCompatActivity {
 
 
             dbReference.addValueEventListener(new ValueEventListener() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (chatKey.isEmpty()) {
                         //generate chatKey. By default chatKey is 1
-                        chatKey = "1";
+                        chatKey = "0";
 
                         if (snapshot.hasChild("chat")) {
                             chatKey = String.valueOf(snapshot.child("chat").getChildrenCount() + 1);
@@ -98,21 +103,24 @@ public class Chat extends AppCompatActivity {
 
                             for (DataSnapshot messageSnapshot : snapshot.child("chat").child(chatKey).child("messages").getChildren()) {
 
-                                if (messageSnapshot.hasChild("msg") && messageSnapshot.hasChild("mobile")) {
+                                if (messageSnapshot.hasChild("msg") && messageSnapshot.hasChild("indexNum")) {
 
                                     final String messageTimeStamps = messageSnapshot.getKey();
-                                    final String getMobile = messageSnapshot.child("mobile").getValue(String.class);
+                                    final String getIndexNum = messageSnapshot.child("indexNum").getValue(String.class);
                                     final String getMsg = messageSnapshot.child("msg").getValue(String.class);
 
-                                    assert getMobile != null;
+                                    assert getIndexNum != null;
                                     assert messageTimeStamps != null;
 
                                     Timestamp timestamp = new Timestamp(Long.parseLong(messageTimeStamps));
-                                    Date date = new Date(timestamp.getTime());
-                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-                                    SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
-                                    ChatList chatList = new ChatList(getMobile, getName, getMsg, simpleDateFormat.format(date), simpleTimeFormat.format(date));
+                                    LocalDateTime dateM = Instant.ofEpochMilli(timestamp.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+                                    DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                                    DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+                                    String date = dateFormatter.format(dateM);
+                                    String time = timeFormatter.format(dateM);
+                                    ChatList chatList = new ChatList(getIndexNum, getUserName, getMsg, date, time);
                                     chatLists.add(chatList);
+
 
                                     if (loadingFirstTime|| Long.parseLong(messageTimeStamps) < Long.parseLong(MemoryData.getLastMsgTS(Chat.this, chatKey))) {
                                         loadingFirstTime = false;
@@ -139,14 +147,15 @@ public class Chat extends AppCompatActivity {
             final String getTxtMessage = messageEditText.getText().toString();
 
             //get currentTimeStamp
-            final String currentTimeStamp = String.valueOf(System.currentTimeMillis()).substring(0, 10);
+            final String currentTimeStamp = String.valueOf(System.currentTimeMillis());
+            Log.d("Message", currentTimeStamp);
 
-            dbReference.child("chat").child(chatKey).child("user_1").setValue(getUserMobile);
-            dbReference.child("chat").child(chatKey).child("user_2").setValue(getMobile);
+            dbReference.child("chat").child(chatKey).child("user_1").setValue(getUserIndexNum);
+            dbReference.child("chat").child(chatKey).child("user_2").setValue(getOtherIndexNum);
             dbReference.child("chat").child(chatKey).child("messages")
                     .child(currentTimeStamp).child("msg").setValue(getTxtMessage);
             dbReference.child("chat").child(chatKey).child("messages")
-                    .child(currentTimeStamp).child("mobile").setValue(getUserMobile);
+                    .child(currentTimeStamp).child("indexNum").setValue(getUserIndexNum);
 
             //clear textField after text sent and hide keyboard
             closeKeyboard();

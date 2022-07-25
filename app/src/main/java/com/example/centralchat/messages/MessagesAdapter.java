@@ -3,6 +3,7 @@ package com.example.centralchat.messages;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyViewHolder> {
     private List<MessagesList> messagesLists;
-    private Context context;
+    private final Context context;
 
     public MessagesAdapter(List<MessagesList> messagesLists, Context context) {
         this.messagesLists = messagesLists;
@@ -46,12 +47,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
             Glide.with(context).load(list2.getProfilePic()).into(holder.profilePic);
         }
 
-        holder.name.setText(list2.getName());
+        holder.name.setText(list2.getUserName());
         holder.lastMessage.setText(list2.getLastMessage());
 
         if(list2.getUnseenMessages() == 0) {
             holder.unseenMessages.setVisibility(View.GONE);
-            holder.lastMessage.setTextColor(Color.parseColor("#FFFFFF"));
+            holder.lastMessage.setTextColor(Color.parseColor("#454545"));
         }else {
             holder.unseenMessages.setVisibility(View.VISIBLE);
             holder.unseenMessages.setText(context
@@ -59,12 +60,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
             holder.lastMessage.setTextColor(Color.parseColor("#3590F3"));
         }
 
+        Log.d("Message tag", String.valueOf(list2.getUnseenMessages()));
         holder.rootLayout.setOnClickListener(v -> {
             Intent intent = new Intent(context, Chat.class);
-            intent.putExtra("name", list2.getName());
+            intent.putExtra("userName", list2.getUserName());
             intent.putExtra("profile_pic", list2.getProfilePic());
             intent.putExtra("chat_key", list2.getChatKey());
-            intent.putExtra("mobile", list2.getMobile());
+            intent.putExtra("indexNum", list2.getGetOtherIndexNum());
             context.startActivity(intent);
         });
     }
@@ -81,9 +83,11 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MyView
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private CircleImageView profilePic;
-        private TextView name, lastMessage, unseenMessages;
-        private LinearLayout rootLayout;
+        private final CircleImageView profilePic;
+        private final TextView name;
+        private final TextView lastMessage;
+        private final TextView unseenMessages;
+        private final LinearLayout rootLayout;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -15,15 +15,15 @@
         android:contentDescription="@string/logo_description" />
 
     <TextView
+        android:id="@+id/motto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/faith_integrity_and_n_excellence"
         android:layout_below="@+id/central_logo"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        android:textStyle="bold|italic"
-        android:paddingTop="20dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/motto"/>
+        android:paddingTop="20dp"
+        android:text="@string/faith_integrity_and_n_excellence"
+        android:textAlignment="center"
+        android:textSize="@dimen/_25ssp"
+        android:textStyle="bold|italic" />
 
 </RelativeLayout>

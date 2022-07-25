@@ -11,32 +11,36 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:contentDescription="@string/search_icon"
+            android:id="@+id/searchBtn"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_centerVertical="true"
             android:layout_marginStart="35dp"
             android:layout_marginTop="40dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/search_icon"
-            android:background="@drawable/round_back_light"/>
+            android:background="@drawable/round_back_light"
+            android:clickable="true"
+            android:contentDescription="@string/search_icon"
+            android:focusable="true"
+            android:src="@drawable/search_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:text="@string/messages"
             android:textColor="#424242"
-            android:layout_centerInParent="true"
+            android:textSize="@dimen/_15ssp"
             android:textStyle="bold"
-            android:textSize="18sp"/>
+            tools:ignore="RelativeOverlap" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userProfilePicture"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginTop="40dp"
-            android:layout_marginEnd="35dp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
             android:contentDescription="@string/profile_icon"
             android:src="@drawable/user" />
 

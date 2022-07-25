@@ -22,8 +22,8 @@
         android:roundIcon="@mipmap/chatlogo"
         android:supportsRtl="true"
         android:theme="@style/DemoTheme"
-        tools:targetApi="31"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="31">
         <activity
             android:name=".chat.Chat"
             android:exported="false" />

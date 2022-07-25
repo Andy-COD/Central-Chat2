@@ -45,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hint_username"
-                android:textSize="18sp"
+                android:textSize="@dimen/_18ssp"
                 android:maxLines="1"
                 android:textColor="#424242"
                 android:textStyle="bold"
@@ -65,11 +65,11 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/chatsRecyclerView"
-        android:layout_below="@+id/chatHeader"
-        android:layout_above="@+id/input"/>
+        android:layout_above="@+id/input"
+        android:layout_below="@+id/chatHeader" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -88,10 +88,10 @@
             android:layout_toStartOf="@+id/sendBtn"
             android:backgroundTint="@android:color/transparent"
             android:hint="@string/enter_message_here"
-            android:textSize="14sp"
+            android:importantForAutofill="no"
             android:inputType="text"
-            android:textStyle="bold"
-            android:importantForAutofill="no" />
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/sendBtn"

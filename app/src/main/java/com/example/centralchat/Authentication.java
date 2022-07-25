@@ -52,7 +52,7 @@ public class Authentication extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        videoView.start();
+        videoView.resume();
         super.onResume();
     }
 

@@ -1,12 +1,16 @@
 package com.example.centralchat.messages;
 
 public class MessagesList {
-    private String name, mobile, lastMessage, profilePic, chatKey;
-    private int unseenMessages;
+    private final String userName;
+    private final String getOtherIndexNum;
+    private final String lastMessage;
+    private final String profilePic;
+    private final String chatKey;
+    private final int unseenMessages;
 
-    public MessagesList(String name, String mobile, String lastMessage, String profilePic, int unseenMessages, String chatKey) {
-        this.name = name;
-        this.mobile = mobile;
+    public MessagesList(String userName, String getOtherIndexNum, String lastMessage, String profilePic, int unseenMessages, String chatKey) {
+        this.userName = userName;
+        this.getOtherIndexNum = getOtherIndexNum;
         this.lastMessage = lastMessage;
         this.profilePic = profilePic;
         this.unseenMessages = unseenMessages;
@@ -25,12 +29,12 @@ public class MessagesList {
         return unseenMessages;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getGetOtherIndexNum() {
+        return getOtherIndexNum;
     }
 
     public String getLastMessage() {

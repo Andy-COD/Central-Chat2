@@ -21,7 +21,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/opo_msg_back"
-                android:padding="20dp"
+                android:padding="@dimen/_20sdp"
+                android:textSize="@dimen/_15ssp"
                 android:text="@string/friend_placeholder"
                 android:textColor="#424242" />
 
@@ -31,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="@string/timeStamp_placeholder"
-                android:textSize="12sp" />
+                android:textSize="@dimen/_10ssp" />
 
         </LinearLayout>
 
@@ -50,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:background="@drawable/my_msg_back"
-                android:padding="20dp"
+                android:padding="@dimen/_20sdp"
+                android:textSize="@dimen/_15ssp"
                 android:text="@string/my_message_placeholder"
                 android:textColor="#FFFFFF" />
 
@@ -61,7 +63,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="5dp"
                 android:text="@string/timeStamp_placeholder"
-                android:textSize="12sp" />
+                android:textSize="@dimen/_10ssp" />
 
         </LinearLayout>
 

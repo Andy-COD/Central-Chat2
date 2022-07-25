@@ -1,22 +1,21 @@
 package com.example.centralchat.homefragments;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.centralchat.R;
 import com.example.centralchat.news.NewsAdapter;
 import com.example.centralchat.news.NewsList;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,8 +39,6 @@ public class NewsFragment extends Fragment {
         // Inflate the layout for this fragment
          view  = inflater.inflate(R.layout.fragment_news, container, false);
 
-         Fresco.initialize(requireActivity().getApplicationContext());
-
          newsImage = view.findViewById(R.id.news_image);
          content = view.findViewById(R.id.news_content);
          date = view.findViewById(R.id.news_time);
@@ -60,8 +57,9 @@ public class NewsFragment extends Fragment {
                     final String getNewsBody = dataSnapshot.child("newsBody").getValue(String.class);
                     final String getNewsImage = dataSnapshot.child("newsImage").getValue(String.class);
                     final String getNewsDate = dataSnapshot.child("newsDate").getValue(String.class);
+                    final String getNewsLink = dataSnapshot.child("newsLink").getValue(String.class);
 
-                    NewsList newsList = new NewsList(getNewsBody, getNewsDate, getNewsImage);
+                    NewsList newsList = new NewsList(getNewsBody, getNewsDate, getNewsImage, getNewsLink);
                     newsLists.add(newsList);
                 }
                 newsRecyclerView.setAdapter(new NewsAdapter(newsLists, getActivity()));
@@ -72,6 +70,8 @@ public class NewsFragment extends Fragment {
 
             }
         });
+
+
 
         return view;
     }

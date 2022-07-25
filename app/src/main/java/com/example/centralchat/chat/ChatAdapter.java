@@ -19,12 +19,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
     private List<ChatList> chatLists;
     private final Context context;
-    private String userMobile;
+    private final String userIndexNum;
 
     public ChatAdapter(List<ChatList> chatLists, Context context) {
         this.chatLists = chatLists;
         this.context = context;
-        this.userMobile = MemoryData.getIndexNum(context);
+        this.userIndexNum = MemoryData.getIndexNum(context);
     }
 
     @NonNull
@@ -37,7 +37,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         ChatList list2 = chatLists.get(position);
 
-        if (list2.getMobile().equals(userMobile)) {
+        if (list2.getIndexNum().equals(userIndexNum)) {
             holder.myLayout.setVisibility(View.VISIBLE);
             holder.oppoLayout.setVisibility(View.GONE);
 
@@ -63,9 +63,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MyViewHolder> 
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private LinearLayout myLayout, oppoLayout;
-        private TextView oppoMessage, myMessage;
-        private TextView oppoTime, myTime;
+        private final LinearLayout myLayout;
+        private final LinearLayout oppoLayout;
+        private final TextView oppoMessage;
+        private final TextView myMessage;
+        private final TextView oppoTime;
+        private final TextView myTime;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 

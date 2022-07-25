@@ -18,13 +18,14 @@
         android:layout_below="@id/toolbar"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/_16sdp"
+        >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register_btn"
-            android:textSize="25sp"
+            android:textSize="@dimen/_25ssp"
             android:textStyle="bold"
             />
 
@@ -33,9 +34,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/username"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:hint="@string/hint_username"
-            android:textSize="25sp"
+            android:textSize="@dimen/_20ssp"
             android:inputType="text"
             />
 
@@ -43,9 +44,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/email"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:hint="@string/hint_email"
-            android:textSize="25sp"
+            android:textSize="@dimen/_20ssp"
             android:inputType="textEmailAddress"
             />
 
@@ -53,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/index_num"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:hint="@string/index_num"
             android:textSize="25sp"
             android:inputType="textEmailAddress"
@@ -63,9 +64,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/phoneNum"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:hint="@string/phone_number"
-            android:textSize="25sp"
+            android:textSize="@dimen/_20ssp"
             android:inputType="phone"
             />
 
@@ -73,9 +74,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/password"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/_15sdp"
             android:hint="@string/hint_password"
-            android:textSize="25sp"
+            android:textSize="@dimen/_20ssp"
             android:inputType="textPassword"
             />
 
@@ -87,7 +88,7 @@
             android:text="@string/register_btn"
             android:layout_marginTop="15dp"
             android:textColor="@color/white"
-            android:textSize="23sp"
+            android:textSize="@dimen/_18ssp"
             style="?android:attr/borderlessButtonStyle"
             />
 

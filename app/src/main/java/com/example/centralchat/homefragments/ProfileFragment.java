@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment {
                 if (profileImage.equals("default")) {
                     Glide.with(requireActivity()).load(R.drawable.user_icon).into(profilePic);
                 }else {
-                    Glide.with(getContext()).load(profileImage).into(profilePic);
+                    Glide.with(requireActivity()).load(profileImage).into(profilePic);
                 }
 
             }
@@ -125,7 +125,7 @@ public class ProfileFragment extends Fragment {
         edit.setOnClickListener(v -> {
             final DialogPlus dialogPlus = DialogPlus.newDialog(requireActivity())
                     .setContentHolder(new ViewHolder(R.layout.update_popup))
-                    .setExpanded(true, 1500)
+                    .setExpanded(true, 1200)
                     .create();
 
             View view1 = dialogPlus.getHolderView();
@@ -136,7 +136,10 @@ public class ProfileFragment extends Fragment {
             update = view1.findViewById(R.id.updateBtn);
             chooseFile = view1.findViewById(R.id.chooseFile);
 
-            chooseFile.setOnClickListener(v12 -> launcher.launch("image/*"));
+            chooseFile.setOnClickListener(v12 -> {
+                launcher.launch("image/*");
+                requireActivity().onBackPressed();
+            });
 
 
             dialogPlus.show();

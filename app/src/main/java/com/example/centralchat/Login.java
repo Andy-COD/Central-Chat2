@@ -60,8 +60,9 @@ public class Login extends AppCompatActivity {
                             String getPassword = snapshot.child(txtIndex).child("password").getValue(String.class);
                             if(Objects.equals(getPassword, txtPassword)) {
                                 Toast.makeText(Login.this, "Successfully logged in", Toast.LENGTH_SHORT).show();
+                                MemoryData.saveIndexNum(txtIndex, Login.this);
                                 Intent intent = new Intent(Login.this, HomePage.class);
-                                intent.putExtra("index number", txtIndex);
+                                intent.putExtra("index number", MemoryData.getIndexNum(Login.this));
                                 startActivity(intent);
 
                                 finish();
